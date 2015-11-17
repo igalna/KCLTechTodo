@@ -62,7 +62,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
-    public ArrayList<Task> getUncompleteTasks () {
+    public ArrayList<Task> getIncompleteTasks() {
         ArrayList<Task> output = new ArrayList<>();
 
         SQLiteDatabase db = getReadableDatabase();

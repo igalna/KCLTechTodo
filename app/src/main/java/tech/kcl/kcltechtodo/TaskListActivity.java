@@ -1,20 +1,18 @@
 package tech.kcl.kcltechtodo;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.joda.time.DateTime;
 
@@ -67,15 +65,26 @@ public class TaskListActivity extends AppCompatActivity {
         taskListAdapter = new TaskListAdapter(this);
         listView.setAdapter(taskListAdapter);
 
+        // set click listener
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                onTaskClicked((Task) taskListAdapter.getItem(position));
+            }
+        });
+
         Task task1 = new Task("Buy Milk", "The Green Stuff", DateTime.now(), false);
         Task task2 = new Task("Buy Bread", "Wholemeal Bread", DateTime.now(), false);
         Task task3 = new Task("Buy Tickets", "", DateTime.now(), false);
+        Task task4 = new Task("Buy other things", "Coco pops", DateTime.now(), false);
 
         DBHelper dbHelper = new DBHelper(this);
 
         dbHelper.saveTask(task1);
         dbHelper.saveTask(task2);
         dbHelper.saveTask(task3);
+        dbHelper.saveTask(task4);
 
     }
 
@@ -103,12 +112,37 @@ public class TaskListActivity extends AppCompatActivity {
         refreshTasks();
     }
 
+    private void onTaskClicked(final Task task) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // set the options we want
+        builder.setMessage(task.getNotes())
+                .setPositiveButton(R.string.task_list_activity_complete_button, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // mark as complete
+                        task.setIsComplete(true);
+
+                        // save it in the database
+                        dbHelper.saveTask(task);
+
+                        // refresh the tasks
+                        refreshTasks();
+                    }
+                })
+                .setNeutralButton(R.string.task_list_activity_edit_button, null);
+
+        // create an actual dialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
     private void refreshTasks() {
         loadingIcon.setVisibility(View.VISIBLE);
         listView.setVisibility(View.GONE);
         noTasksMessage.setVisibility(View.GONE);
 
-        taskList = dbHelper.getUncompleteTasks();
+        taskList = dbHelper.getIncompleteTasks();
         taskListAdapter.setTasks(taskList);
         taskListAdapter.notifyDataSetChanged();
 
