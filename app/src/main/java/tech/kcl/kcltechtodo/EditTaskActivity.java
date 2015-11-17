@@ -76,6 +76,13 @@ public class EditTaskActivity extends AppCompatActivity {
         // switch to the form view from the loading view
         loadingIcon.setVisibility(View.GONE);
         mainContent.setVisibility(View.VISIBLE);
+
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveTask();
+            }
+        });
     }
 
 
