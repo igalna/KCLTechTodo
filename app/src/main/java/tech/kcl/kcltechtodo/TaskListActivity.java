@@ -74,7 +74,7 @@ public class TaskListActivity extends AppCompatActivity {
             }
         });
 
-        Task task1 = new Task("Buy Milk", "The Green Stuff", DateTime.now(), false);
+        /*Task task1 = new Task("Buy Milk", "The Green Stuff", DateTime.now(), false);
         Task task2 = new Task("Buy Bread", "Wholemeal Bread", DateTime.now(), false);
         Task task3 = new Task("Buy Tickets", "", DateTime.now(), false);
 
@@ -82,7 +82,7 @@ public class TaskListActivity extends AppCompatActivity {
 
         dbHelper.saveTask(task1);
         dbHelper.saveTask(task2);
-        dbHelper.saveTask(task3);
+        dbHelper.saveTask(task3);*/
 
     }
 
@@ -124,7 +124,12 @@ public class TaskListActivity extends AppCompatActivity {
                         refreshTasks();
                     }
                 })
-                .setNeutralButton(R.string.task_list_activity_edit_button, null);
+                .setNeutralButton(R.string.task_list_activity_edit_button, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
 
         // create an actual dialog
         AlertDialog dialog = builder.create();

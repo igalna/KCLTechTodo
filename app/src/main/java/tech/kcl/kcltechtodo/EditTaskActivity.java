@@ -53,9 +53,19 @@ public class EditTaskActivity extends AppCompatActivity {
     private DatePicker dueDateInput;
     private EditText notesInput;
 
+    // activity state
+    private boolean createNew = true;
+    private int editId = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null && extras.containsKey("task_id")) {
+            createNew = false;
+            editId = extras.getInt("task_id");
+        }
 
         // set the layout of this activity
         setContentView(R.layout.activity_edit_task);
@@ -83,6 +93,15 @@ public class EditTaskActivity extends AppCompatActivity {
                 saveTask();
             }
         });
+
+
+
+        if (!createNew) {
+            Task editingTask = new DBHelper(this).getTask(editId);
+            if (editingTask != null) {
+
+            }
+        }
     }
 
 
@@ -98,6 +117,9 @@ public class EditTaskActivity extends AppCompatActivity {
 
         // make a new task
         Task task = new Task(title, notes, dateTime, false);
+        if (editId  > 0) {
+            task.setId(editId);
+        }
 
         // save task in the database
 
