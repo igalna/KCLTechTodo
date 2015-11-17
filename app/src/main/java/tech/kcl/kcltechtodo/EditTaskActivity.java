@@ -11,6 +11,8 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.joda.time.DateTime;
+
 /*======================================================================
 
 ** Activities **
@@ -76,4 +78,25 @@ public class EditTaskActivity extends AppCompatActivity {
         mainContent.setVisibility(View.VISIBLE);
     }
 
+
+    private void saveTask() {
+        String title = titleInput.getText().toString();
+        String notes = notesInput.getText().toString();
+        DateTime dateTime = new DateTime(
+                dueDateInput.getYear(),
+                dueDateInput.getMonth() + 1,
+                dueDateInput.getDayOfMonth(),
+                0, 0 , 0
+        );
+
+        // make a new task
+        Task task = new Task(title, notes, dateTime, false);
+
+        // save task in the database
+
+        new DBHelper(this).saveTask(task);
+
+        // send the user back
+        finish();
+    }
 }

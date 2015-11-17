@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 
@@ -56,33 +57,65 @@ public class DBHelper extends SQLiteOpenHelper {
         db.insertWithOnConflict(
                 "Tasks",
                 null,
-                t.getContentValuese(),
+                t.getContentValues(),
                 SQLiteDatabase.CONFLICT_REPLACE
         );
     }
 
 
     public ArrayList<Task> getIncompleteTasks() {
+        // create an empty ArrayList to build our output
         ArrayList<Task> output = new ArrayList<>();
 
+        // get a readable instance of the database
         SQLiteDatabase db = getReadableDatabase();
-        if (db == null)
-            return output;
+        if (db == null) return output;
 
-        Cursor allTasks = db.rawQuery("SELECT * " +
-                "FROM Tasks " +
-                "WHERE is_complete = 0 " +
-                "ORDER BY due_date ASC;", null);
+        // run the query to get all incomplete tasks
+        Cursor rawTasks = db.rawQuery("SELECT * FROM Tasks WHERE is_complete = 0 ORDER BY due_date ASC;", null);
 
-        if(allTasks.moveToFirst()) {
+        // move the cursor to the first result (or skip this section if there are no results)
+        if (rawTasks.moveToFirst()) {
+            // iterate through results
             do {
-                // somethinge with cursor
-                output.add(new Task(allTasks));
-            } while (allTasks.moveToNext());
+                // convert the cursor version of the task to a real Task object and add it to output
+                output.add(new Task(rawTasks));
+            } while (rawTasks.moveToNext());
         }
 
+        // we're done with the cursor and database, so we can close them here
+        rawTasks.close();
+        db.close();
+
+        // return the (possibly empty) list
         return output;
 
+    }
+
+    @Nullable
+    public Task getTask(int id) {
+        // "holder" for our output, which starts as null
+        Task output = null;
+
+        // get a readable instance of the database
+        SQLiteDatabase db = getReadableDatabase();
+        if (db == null) return null;
+
+        // run the query to get the matching task
+        Cursor rawTask = db.rawQuery("SELECT * FROM Tasks WHERE id = ? ORDER BY due_date ASC;", new String[]{String.valueOf(id)});
+
+        // move the cursor to the first result, if one exists
+        if (rawTask.moveToFirst()) {
+            // convert the cursor to a task and assign it to our output
+            output = new Task(rawTask);
+        }
+
+        // we're done with the cursor and database, so we can close them here
+        rawTask.close();
+        db.close();
+
+        // return the (possibly null) output
+        return output;
     }
 
 

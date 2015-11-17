@@ -31,7 +31,7 @@ public class Task {
         isComplete = input.getInt(input.getColumnIndex("is_complete")) == 1;
     }
 
-    public ContentValues getContentValuese() {
+    public ContentValues getContentValues() {
         ContentValues output = new ContentValues();
 
         if (id > 0)

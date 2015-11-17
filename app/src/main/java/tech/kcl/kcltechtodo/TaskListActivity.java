@@ -77,14 +77,12 @@ public class TaskListActivity extends AppCompatActivity {
         Task task1 = new Task("Buy Milk", "The Green Stuff", DateTime.now(), false);
         Task task2 = new Task("Buy Bread", "Wholemeal Bread", DateTime.now(), false);
         Task task3 = new Task("Buy Tickets", "", DateTime.now(), false);
-        Task task4 = new Task("Buy other things", "Coco pops", DateTime.now(), false);
 
         DBHelper dbHelper = new DBHelper(this);
 
         dbHelper.saveTask(task1);
         dbHelper.saveTask(task2);
         dbHelper.saveTask(task3);
-        dbHelper.saveTask(task4);
 
     }
 
@@ -97,13 +95,9 @@ public class TaskListActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.create_task:
-                startActivity(new Intent(TaskListActivity.this, EditTaskActivity.class));
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+        Intent goToEdit = new Intent(getApplicationContext(), EditTaskActivity.class);
+        startActivity(goToEdit);
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
