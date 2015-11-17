@@ -72,27 +72,6 @@ public class TaskListActivity extends AppCompatActivity {
         listView.setVisibility(View.VISIBLE);
 
 
-        // PREFERENCES //
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        SharedPreferences.Editor prefEditor = prefs.edit();
-
-        prefEditor.putInt("user_highscore", 9001);
-        prefEditor.putBoolean("welcome_tour_finished", true);
-        prefEditor.putString("notification_alert_sound", "bells");
-
-        prefEditor.apply();
-
-        int highScore = prefs.getInt("user_highscore", 0);
-        boolean tourFinished = prefs.getBoolean("welcome_tour_finished", false);
-        String alertSound = prefs.getString("notification_alert_sound", null);
-
-        String somethingElse = prefs.getString("unknown_key", "default_value");
-
-
-        Toast.makeText(this, "alert : " + alertSound + "\nsomething else : " + somethingElse + "\nhigh score : " + highScore, Toast.LENGTH_LONG).show();
-
-
         // DB INSERT //
 
         Task task1 = new Task("Buy Milk", "The Green Stuff", DateTime.now(), false);
@@ -108,10 +87,10 @@ public class TaskListActivity extends AppCompatActivity {
 
         // DB READ //
 
-        ArrayList<Task> tasks = dbHelper.getUncompleteTasks();
+        /*ArrayList<Task> tasks = dbHelper.getUncompleteTasks();
         for (Task t : tasks) {
             // Do something here
-        }
+        }*/
 
     }
 
