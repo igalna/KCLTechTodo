@@ -1,0 +1,48 @@
+<resources>
+
+	<!--=====================================================================
+
+	** Style Resources **
+
+	In Android, almost everything about how a view looks can be specified,
+	allowing you complete control over the appearance of your app. For easy
+	management of styles, they can be defined in a resource file and re-used
+	throughout your application.
+
+	Each style consists of two main parts:
+		- An optional parent, allowing one class to "extend" another
+		- A set of <item> tags, which specify the style itself
+
+	Anyone who is familiar with CSS should find this very natural.
+
+	You can reference styles from resource files in other resource file (like
+	layouts) using this notation:
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		style="@style/my_text_style" />
+
+	======================================================================-->
+
+	<!--
+	This is the theme that applies to the entire app.
+	It has DarkActionBar as is parent to inherit all of its features.
+	-->
+	<style name="global_app_theme" parent="Theme.AppCompat.Light.DarkActionBar">
+		<!-- Our app theme could be customised here. -->
+	</style>
+
+	<style name="edit_task_activity_label">
+		<item name="android:textSize">18sp</item>
+		<item name="android:textStyle">bold</item>
+		<item name="android:textColor">#222222</item>
+	</style>
+    <style name="global_app_theme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="global_app_theme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="global_app_theme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+</resources>
