@@ -70,8 +70,8 @@ public class DBHelper extends SQLiteOpenHelper {
             return output;
 
         Cursor allTasks = db.rawQuery("SELECT * " +
-                "FROM Tasks" +
-                "WHERE is_complete = 0" +
+                "FROM Tasks " +
+                "WHERE is_complete = 0 " +
                 "ORDER BY due_date ASC;", null);
 
         if(allTasks.moveToFirst()) {

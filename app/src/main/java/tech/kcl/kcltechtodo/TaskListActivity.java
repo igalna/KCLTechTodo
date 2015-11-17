@@ -27,7 +27,25 @@ public class TaskListActivity extends AppCompatActivity {
     private ListView listView;
     private TextView noTasksMessage;
 
-	/*================*
+    private ArrayList<Task> taskList = new ArrayList<>();
+    private DBHelper dbHelper = null;
+    private TaskListAdapter taskListAdapter;
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        dbHelper = new DBHelper(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        dbHelper.close();
+        dbHelper = null;
+    }
+
+    /*================*
      * Activity setup *
 	 *================*/
 
@@ -46,33 +64,8 @@ public class TaskListActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.list_view);
         noTasksMessage = (TextView) findViewById(R.id.no_tasks_message);
 
-
-
-        String[] data = {"Anna", "Victor", "Jordan",
-                         "Steve", "Mark", "Carmichael",
-                         "Richard", "Sarah",
-                         "Casey", "Willey",
-                         "Anna", "Victor", "Jordan",
-                         "Steve", "Mark", "Carmichael",
-                         "Richard", "Sarah",
-                         "Casey", "Willey",
-                         "Anna", "Victor", "Jordan",
-                         "Steve", "Mark", "Carmichael",
-                         "Richard", "Sarah",
-                         "Casey", "Willey",
-                         "Anna", "Victor", "Jordan",
-                         "Steve", "Mark", "Carmichael",
-                         "Richard", "Sarah",
-                         "Casey", "Willey"};
-
-        BuildXNameAdapter myAdapter = new BuildXNameAdapter(this, data);
-        listView.setAdapter(myAdapter);
-
-        loadingIcon.setVisibility(View.GONE);
-        listView.setVisibility(View.VISIBLE);
-
-
-        // DB INSERT //
+        taskListAdapter = new TaskListAdapter(this);
+        listView.setAdapter(taskListAdapter);
 
         Task task1 = new Task("Buy Milk", "The Green Stuff", DateTime.now(), false);
         Task task2 = new Task("Buy Bread", "Wholemeal Bread", DateTime.now(), false);
@@ -83,14 +76,6 @@ public class TaskListActivity extends AppCompatActivity {
         dbHelper.saveTask(task1);
         dbHelper.saveTask(task2);
         dbHelper.saveTask(task3);
-
-
-        // DB READ //
-
-        /*ArrayList<Task> tasks = dbHelper.getUncompleteTasks();
-        for (Task t : tasks) {
-            // Do something here
-        }*/
 
     }
 
@@ -112,4 +97,26 @@ public class TaskListActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refreshTasks();
+    }
+
+    private void refreshTasks() {
+        loadingIcon.setVisibility(View.VISIBLE);
+        listView.setVisibility(View.GONE);
+        noTasksMessage.setVisibility(View.GONE);
+
+        taskList = dbHelper.getUncompleteTasks();
+        taskListAdapter.setTasks(taskList);
+        taskListAdapter.notifyDataSetChanged();
+
+        loadingIcon.setVisibility(View.GONE);
+
+        if (taskList.isEmpty())
+            noTasksMessage.setVisibility(View.VISIBLE);
+        else
+            listView.setVisibility(View.VISIBLE);
+    }
 }
